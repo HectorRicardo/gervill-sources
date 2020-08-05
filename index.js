@@ -186,7 +186,7 @@ function cleanForComparison(contents) {
  * @param {string} originalContent - the original content of the file, as retrieved from the repo.
  */
 async function createFileCopies(directory, filename, originalContent) {
-  await fs.mkdir(`../gervill-control/src/gervill/${directory}`, { recursive: true });
+  await fs.mkdir(`../gervill-control/output/src/gervill/${directory}`, { recursive: true });
   await fs.mkdir(`../gervill-control/comp/original-comp/${directory}`, { recursive: true });
   await fs.mkdir(`../gervill-control/comp/gervill-comp/${directory}`, { recursive: true });
 
@@ -206,7 +206,7 @@ async function createFileCopies(directory, filename, originalContent) {
     );
 
   const path = `${directory}/${filename}`;
-  await fs.writeFile(`../gervill-control/src/gervill/${path}`, newFileContent);
+  await fs.writeFile(`../gervill-control/output/src/gervill/${path}`, newFileContent);
   await fs.writeFile(`../gervill-control/comp/original-comp/${path}`, cleanForComparison(originalContent));
   await fs.writeFile(`../gervill-control/comp/gervill-comp/${path}`, cleanForComparison(newFileContent));
 }

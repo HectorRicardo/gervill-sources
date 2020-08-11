@@ -2,6 +2,9 @@ const https = require('https');
 const fs = require('fs').promises;
 const strip = require('strip-comments');
 
+// const exceptions = require('./exceptions.json');
+const skipclasses = new Set(require('./skipclasses.json'));
+
 const BASE_URL = 'https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/raw-file/tip/src/share/classes';
 
 /**
@@ -96,9 +99,10 @@ function fetchDirectory(path, makeCopies) {
 async function fetchDirectoryAux(directory, makeCopies) {
   const fileListing = await getFileListing(directory);
   for (const { name, isDirectory } of fileListing) {
+    const fileOrDirName = `${directory}/${name}`;
     if (isDirectory) {
-      await fetchDirectoryAux(`${directory}/${name}`, makeCopies);
-    } else {
+      await fetchDirectoryAux(fileOrDirName, makeCopies);
+    } else if (!skipclasses.has(fileOrDirName)) {
       await fetchFileAux(directory, name, makeCopies);
     }
   }
@@ -171,6 +175,8 @@ const throwsOrSeeRegex = /(?:@(throws|see))/;
 
 const finalCommentsLinkRegex = new RegExp(`${commentsLinkRegex.source}|${throwsOrSeeRegex.source}`, 'g');
 
+// const exceptionsRegex = new RegExp(exceptions.map(fullName => fullName.match(/\w+(?=\.java)/)[0]).join('|'), 'g');
+
 function cleanForComparison(contents) {
   return strip(contents.replace(packageAndImportsRegex, ''));
 }
@@ -203,7 +209,7 @@ async function createFileCopies(directory, filename, originalContent) {
     ).replace(
       finalCommentsLinkRegex,
       (_, textThatWillStay1, textThatWillStay2) => coalesce(textThatWillStay1, textThatWillStay2)
-    );
+    ); // .replace(exceptionsRegex, 'RuntimeException');
 
   const path = `${directory}/${filename}`;
   await fs.writeFile(`../gervill-control/output/src/gervill/${path}`, newFileContent);
@@ -220,7 +226,6 @@ async function createFileCopies(directory, filename, originalContent) {
       await fetchDirectory('javax/sound/midi', false);
       await fetchDirectory('javax/sound/sampled', false);
       await fetchDirectory('com/sun/media/sound', false);
-      await fetchFile('java/applet/AudioClip.java', false);
       break;
     case '-c': // copy files
       await createCopiesOfFiles();

@@ -1,0 +1,10 @@
+[
+  "com/sun/media/sound/InvalidDataException.java",
+  "com/sun/media/sound/InvalidFormatException.java",
+  "javax/sound/midi/InvalidMidiDataException.java",
+  "javax/sound/midi/MidiUnavailableException.java",
+  "javax/sound/sampled/LineUnavailableException.java",
+  "com/sun/media/sound/RIFFInvalidDataException.java",
+  "com/sun/media/sound/RIFFInvalidFormatException.java",
+  "javax/sound/sampled/UnsupportedAudioFileException.java"
+]

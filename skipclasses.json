@@ -64,6 +64,8 @@
   "java/applet/AudioClip.java",
   "javax/sound/midi/SysexMessage.java",
   "javax/sound/sampled/BooleanControl.java",
+  "javax/sound/sampled/CompoundControl.java",
   "javax/sound/sampled/EnumControl.java",
+  "javax/sound/sampled/FloatControl.java",
   "javax/sound/sampled/ReverbType.java"
 ]

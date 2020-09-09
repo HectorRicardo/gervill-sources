@@ -2,7 +2,7 @@ const https = require('https');
 const fs = require('fs').promises;
 const strip = require('strip-comments');
 
-const exceptions = require('./exceptions.json');
+// const exceptions = require('./exceptions.json');
 const skipclasses = new Set(require('./skipclasses.json'));
 
 const BASE_URL = 'https://hg.openjdk.java.net/jdk8u/jdk8u/jdk/raw-file/tip/src/share/classes';
@@ -174,7 +174,7 @@ const throwsOrSeeRegex = /(?:@(throws|see))/;
 
 const finalCommentsLinkRegex = new RegExp(`${commentsLinkRegex.source}|${throwsOrSeeRegex.source}`, 'g');
 
-const exceptionsRegex = new RegExp(`throw new (?:${exceptions.join('|')})`, 'g');
+// const exceptionsRegex = new RegExp(`throw new (?:${exceptions.join('|')})`, 'g');
 
 function cleanForComparison(contents) {
   return strip(contents.replace(packageAndImportsRegex, ''));
@@ -208,7 +208,7 @@ async function createFileCopies(directory, filename, originalContent) {
     ).replace(
       finalCommentsLinkRegex,
       (_, textThatWillStay1, textThatWillStay2) => coalesce(textThatWillStay1, textThatWillStay2)
-    ).replace(exceptionsRegex, 'throw new RuntimeException');
+    ); //.replace(exceptionsRegex, 'throw new RuntimeException');
 
   const path = `${directory}/${filename}`;
   await fs.writeFile(`../gervill-control/output/src/gervill/${path}`, newFileContent);
